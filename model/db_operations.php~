@@ -1,0 +1,34 @@
+<?php
+	
+	class DButil{
+		private  $data_con;
+		private static $instance;	
+		private function __construct(){
+			$this->data_con= new PDO('mysql:host=localhost;dbname=mvc_data', 'root', 'webonise6186');
+			
+		}
+		static  function get_instance() {
+			if( !isset(DButil::$instance))
+					DButil::$instance=new DButil();
+
+			return DButil::$instance;
+		}
+		
+		function insertData($table_name,$data){
+			$keys='id';
+			$values='\'\'';
+			echo 'In DB';
+			foreach($data as $key=>$value){
+				$keys=$keys.','.$key;
+				$values=$values.',\''.$value.'\'';
+			}
+			$query_str="insert into ".$table_name."($keys) values ($values)";
+			$this->data_con->exec($query_str);
+		}
+		function fetch_all($table_name){
+			$query_str="select * from $table_name ";
+			$stmt=$this->data_con->query($query_str,PDO::FETCH_ASSOC);
+			return $stmt;
+	}
+}
+?>
